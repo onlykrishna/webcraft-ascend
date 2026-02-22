@@ -9,10 +9,15 @@ export default {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        "2xl": "1280px",
       },
     },
     extend: {
+      fontFamily: {
+        display: ["Syne", "sans-serif"],
+        body: ["DM Sans", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -47,6 +52,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        gold: "hsl(var(--gold))",
+        "accent-orange": "hsl(var(--accent-orange))",
+        "accent-blue": "hsl(var(--accent-blue))",
+        "accent-green": "hsl(var(--accent-green))",
+        "surface-2": "hsl(var(--surface-2))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -62,23 +72,24 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        card: "16px",
+        button: "12px",
+        tag: "8px",
+      },
+      boxShadow: {
+        card: "0 8px 32px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04) inset",
+        "card-hover": "0 16px 48px rgba(0,0,0,0.5)",
+        glow: "0 0 32px rgba(0,229,160,0.3)",
+        "glow-blue": "0 0 32px rgba(0,191,255,0.25)",
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
