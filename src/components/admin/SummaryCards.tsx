@@ -1,7 +1,14 @@
 import { useMemo } from "react";
-import { Users, Inbox, Phone, TrendingUp } from "lucide-react";
+import { motion } from "framer-motion";
+import { Users, Inbox, Phone, TrendingUp, TrendingDown, Percent } from "lucide-react";
 import type { Lead } from "@/types/lead";
-import { isToday } from "date-fns";
+import { isToday, subDays, isAfter, isBefore } from "date-fns";
+import { fadeUp } from "@/lib/animations";
+
+interface TrendInfo {
+    value: number;
+    isPositive: boolean;
+}
 
 interface Props {
     leads: Lead[];
@@ -9,15 +16,41 @@ interface Props {
 
 const SummaryCards = ({ leads }: Props) => {
     const stats = useMemo(() => {
+        const now = new Date();
+        const sevenDaysAgo = subDays(now, 7);
+        const fourteenDaysAgo = subDays(now, 14);
+
         const total = leads.length;
-        const newToday = leads.filter((l) => {
-            if (!l.createdAt) return false;
-            return isToday(l.createdAt.toDate());
-        }).length;
+        const newToday = leads.filter((l) => l.createdAt && isToday(l.createdAt.toDate())).length;
         const contacted = leads.filter((l) => l.status === "contacted").length;
         const converted = leads.filter((l) => l.status === "converted").length;
         const rate = total > 0 ? Math.round((converted / total) * 100) : 0;
-        return { total, newToday, contacted, converted, rate };
+
+        // Week-over-week trend helpers
+        const thisWeek = leads.filter(
+            (l) => l.createdAt && isAfter(l.createdAt.toDate(), sevenDaysAgo),
+        ).length;
+        const lastWeek = leads.filter(
+            (l) =>
+                l.createdAt &&
+                isAfter(l.createdAt.toDate(), fourteenDaysAgo) &&
+                isBefore(l.createdAt.toDate(), sevenDaysAgo),
+        ).length;
+
+        const calcTrend = (curr: number, prev: number): TrendInfo => {
+            if (prev === 0) return { value: 100, isPositive: curr > 0 };
+            const pct = Math.round(((curr - prev) / prev) * 100);
+            return { value: Math.abs(pct), isPositive: pct >= 0 };
+        };
+
+        return {
+            total,
+            newToday,
+            contacted,
+            converted,
+            rate,
+            totalTrend: calcTrend(thisWeek, lastWeek),
+        };
     }, [leads]);
 
     const cards = [
@@ -27,20 +60,23 @@ const SummaryCards = ({ leads }: Props) => {
             icon: Users,
             color: "text-primary",
             bg: "bg-primary/10",
+            trend: stats.totalTrend,
         },
         {
             label: "New Today",
             value: stats.newToday,
             icon: Inbox,
-            color: "text-accent-blue",
-            bg: "bg-accent-blue/10",
+            color: "text-sky-400",
+            bg: "bg-sky-400/10",
+            trend: undefined,
         },
         {
             label: "Contacted",
             value: stats.contacted,
             icon: Phone,
-            color: "text-gold",
-            bg: "bg-gold/10",
+            color: "text-amber-400",
+            bg: "bg-amber-400/10",
+            trend: undefined,
         },
         {
             label: "Converted",
@@ -48,29 +84,53 @@ const SummaryCards = ({ leads }: Props) => {
             icon: TrendingUp,
             color: "text-emerald-400",
             bg: "bg-emerald-400/10",
+            trend: undefined,
         },
         {
             label: "Conversion Rate",
             value: `${stats.rate}%`,
-            icon: TrendingUp,
+            icon: Percent,
             color: "text-purple-400",
             bg: "bg-purple-400/10",
+            trend: undefined,
         },
     ];
 
     return (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {cards.map((c) => (
-                <div
+                <motion.div
                     key={c.label}
+                    variants={fadeUp}
+                    initial="hidden"
+                    animate="visible"
                     className="bg-card border border-border rounded-card p-4 card-shadow"
                 >
-                    <div className={`w-9 h-9 rounded-lg ${c.bg} flex items-center justify-center mb-3`}>
-                        <c.icon size={18} className={c.color} />
+                    <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                            <p className="text-xs text-muted-foreground truncate">{c.label}</p>
+                            <p className={`font-display font-extrabold text-2xl mt-1.5 ${c.color}`}>
+                                {c.value}
+                            </p>
+                            {c.trend && (
+                                <div
+                                    className={`mt-1.5 flex items-center gap-1 text-xs font-medium ${c.trend.isPositive ? "text-emerald-400" : "text-red-400"
+                                        }`}
+                                >
+                                    {c.trend.isPositive ? (
+                                        <TrendingUp size={11} />
+                                    ) : (
+                                        <TrendingDown size={11} />
+                                    )}
+                                    <span>{c.trend.value}% vs last week</span>
+                                </div>
+                            )}
+                        </div>
+                        <div className={`w-9 h-9 rounded-lg ${c.bg} flex items-center justify-center shrink-0 ml-2`}>
+                            <c.icon size={17} className={c.color} />
+                        </div>
                     </div>
-                    <p className={`font-display font-extrabold text-2xl ${c.color}`}>{c.value}</p>
-                    <p className="text-muted-foreground text-xs mt-0.5">{c.label}</p>
-                </div>
+                </motion.div>
             ))}
         </div>
     );

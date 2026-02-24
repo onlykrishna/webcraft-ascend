@@ -14,4 +14,6 @@ export interface Lead {
     status: LeadStatus;
     source: string;
     createdAt: Timestamp | null;
+    notes?: string;
+    lastUpdated?: Timestamp;
 }

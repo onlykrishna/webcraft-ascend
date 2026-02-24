@@ -61,14 +61,16 @@ const AnalyticsView = ({ leads }: Props) => {
     }, [leads]);
 
     const tooltipStyle = {
-        backgroundColor: "hsl(220, 20%, 8%)",
-        border: "1px solid rgba(255,255,255,0.08)",
+        backgroundColor: "hsl(var(--card))",
+        border: "1px solid hsl(var(--border))",
         borderRadius: "8px",
-        color: "white",
+        color: "hsl(var(--foreground))",
         fontSize: 12,
     };
 
-    const axisStyle = { fill: "#6b7280", fontSize: 11 };
+    const labelStyle = { color: "hsl(var(--foreground))" };
+    const axisStyle = { fill: "hsl(var(--muted-foreground))", fontSize: 11 };
+    const gridStroke = "hsl(var(--border))";
 
     if (leads.length === 0) {
         return (
@@ -85,7 +87,7 @@ const AnalyticsView = ({ leads }: Props) => {
                 <h3 className="font-display font-bold text-foreground mb-5">Leads per Day — Last 30 Days</h3>
                 <ResponsiveContainer width="100%" height={220}>
                     <LineChart data={lineData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                        <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
                         <XAxis
                             dataKey="date"
                             tick={axisStyle}
@@ -94,7 +96,7 @@ const AnalyticsView = ({ leads }: Props) => {
                             interval={4}
                         />
                         <YAxis tick={axisStyle} tickLine={false} axisLine={false} allowDecimals={false} />
-                        <Tooltip contentStyle={tooltipStyle} cursor={{ stroke: "rgba(0,229,160,0.15)" }} />
+                        <Tooltip contentStyle={tooltipStyle} labelStyle={labelStyle} cursor={{ stroke: "rgba(0,229,160,0.15)" }} />
                         <Line
                             type="monotone"
                             dataKey="count"
@@ -130,12 +132,7 @@ const AnalyticsView = ({ leads }: Props) => {
                                         <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                                     ))}
                                 </Pie>
-                                <Tooltip contentStyle={tooltipStyle} />
-                                <Legend
-                                    iconType="circle"
-                                    iconSize={8}
-                                    formatter={(value) => <span style={{ color: "#9ca3af", fontSize: 11 }}>{value}</span>}
-                                />
+                                <Tooltip contentStyle={tooltipStyle} labelStyle={labelStyle} />
                             </PieChart>
                         </ResponsiveContainer>
                     )}
@@ -149,7 +146,7 @@ const AnalyticsView = ({ leads }: Props) => {
                     ) : (
                         <ResponsiveContainer width="100%" height={230}>
                             <BarChart data={barData} barSize={28}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                                <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} vertical={false} />
                                 <XAxis
                                     dataKey="budget"
                                     tick={{ ...axisStyle, fontSize: 9 }}
@@ -157,7 +154,7 @@ const AnalyticsView = ({ leads }: Props) => {
                                     axisLine={false}
                                 />
                                 <YAxis tick={axisStyle} tickLine={false} axisLine={false} allowDecimals={false} />
-                                <Tooltip contentStyle={tooltipStyle} />
+                                <Tooltip contentStyle={tooltipStyle} labelStyle={labelStyle} />
                                 <Bar dataKey="count" name="Leads" fill="hsl(162, 100%, 45%)" radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>

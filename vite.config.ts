@@ -18,4 +18,22 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Firebase SDK — shared between auth pages and admin
+          firebase: ["firebase/app", "firebase/auth", "firebase/firestore"],
+          // Admin-only heavy deps (only loaded when visiting /admin)
+          charts: ["recharts"],
+          // Animation library — used on public pages AND admin
+          motion: ["framer-motion"],
+          // React + React DOM core
+          vendor: ["react", "react-dom", "react-router-dom"],
+        },
+      },
+    },
+    // Raise warning threshold; we accept the split chunks
+    chunkSizeWarningLimit: 600,
+  },
 }));

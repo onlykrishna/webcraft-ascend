@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,9 +9,19 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
-import Admin from "./pages/Admin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
+import { RefreshCw } from "lucide-react";
+
+// ── Lazy-loaded admin bundle (recharts + heavy deps split into separate chunk) ─
+const Admin = lazy(() => import("./pages/Admin"));
+
+const AdminFallback = () => (
+  <div className="flex h-screen items-center justify-center bg-background gap-3">
+    <RefreshCw size={18} className="animate-spin text-primary" />
+    <span className="text-sm text-muted-foreground font-mono">Loading admin…</span>
+  </div>
+);
 
 const App = () => (
   <AuthProvider>
@@ -35,12 +46,14 @@ const App = () => (
             }
           />
 
-          {/* Admin-only route */}
+          {/* Admin-only route — lazy loaded, split into separate JS chunk */}
           <Route
             path="/admin"
             element={
               <AdminRoute>
-                <Admin />
+                <Suspense fallback={<AdminFallback />}>
+                  <Admin />
+                </Suspense>
               </AdminRoute>
             }
           />
