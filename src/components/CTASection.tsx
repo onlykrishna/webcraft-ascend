@@ -40,7 +40,7 @@ const CTASection = () => {
           >
             Book Your Free Call <ArrowRight size={20} />
           </button>
-          <p className="text-muted-foreground text-xs mt-4">hello@scalvicon.in</p>
+          <p className="text-muted-foreground text-xs mt-4">or email us: <a href="mailto:krishnamaurya2204@gmail.com" className="text-primary hover:underline">krishnamaurya2204@gmail.com</a></p>
           <div className="flex flex-wrap justify-center gap-4 mt-6">
             {["Free", "No Obligation", "Real Advice"].map((item) => (
               <span key={item} className="flex items-center gap-1 text-muted-foreground text-xs">

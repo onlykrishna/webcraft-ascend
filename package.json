@@ -13,7 +13,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "deploy": "npm run build && firebase deploy --only hosting:scalvicon-9bf2f",
-    "deploy:preview": "npm run build && firebase hosting:channel:deploy preview --expires 7d"
+    "deploy:preview": "npm run build && firebase hosting:channel:deploy preview --expires 7d",
+    "generate:sitemap": "node scripts/generate-sitemap.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -58,7 +59,9 @@
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
+    "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.61.1",
+    "react-markdown": "^10.1.0",
     "react-resizable-panels": "^2.1.9",
     "react-router-dom": "^6.30.1",
     "recharts": "^2.15.4",

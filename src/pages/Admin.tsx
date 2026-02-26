@@ -13,7 +13,8 @@ import {
     Clock,
     Bell,
     LayoutDashboard,
-    Briefcase
+    Briefcase,
+    FileText,
 } from "lucide-react";
 import {
     collection,
@@ -34,11 +35,12 @@ import DashboardView from "@/components/admin/DashboardView";
 import ProjectsView from "@/components/admin/ProjectsView";
 import { ActivityTimeline } from "@/components/admin/ActivityTimeline";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import BlogAdmin from "@/pages/BlogAdmin";
 import { cn } from "@/lib/utils";
 import { fadeUp } from "@/lib/animations";
 
 // ─── Tab definition ────────────────────────────────────────────────────────────
-type Tab = "dashboard" | "leads" | "projects" | "analytics" | "activity" | "settings";
+type Tab = "dashboard" | "leads" | "projects" | "analytics" | "activity" | "blog" | "settings";
 
 const sidebarItems: { id: Tab; label: string; icon: any }[] = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -46,6 +48,7 @@ const sidebarItems: { id: Tab; label: string; icon: any }[] = [
     { id: "projects", label: "Projects", icon: Briefcase },
     { id: "analytics", label: "Analytics", icon: BarChart2 },
     { id: "activity", label: "Activity", icon: Clock },
+    { id: "blog", label: "Blog Posts", icon: FileText },
     { id: "settings", label: "Settings", icon: Settings },
 ];
 
@@ -341,6 +344,14 @@ export default function Admin() {
                                         Recent Activity
                                     </h2>
                                     <ActivityTimeline leads={leads} />
+                                </div>
+                            )}
+                            {activeTab === "blog" && (
+                                <div>
+                                    <h2 className="font-display font-bold text-lg text-foreground mb-6">
+                                        Blog Posts
+                                    </h2>
+                                    <BlogAdmin />
                                 </div>
                             )}
                             {activeTab === "settings" && <SettingsPanel />}

@@ -16,6 +16,8 @@ import { RefreshCw } from "lucide-react";
 
 // ── Lazy-loaded admin bundle (recharts + heavy deps split into separate chunk) ─
 const Admin = lazy(() => import("./pages/Admin"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 
 const AdminFallback = () => (
   <div className="flex h-screen items-center justify-center bg-background gap-3">
@@ -64,6 +66,24 @@ const App = () => (
                   <Admin />
                 </Suspense>
               </AdminRoute>
+            }
+          />
+
+          {/* Blog — public, lazy loaded */}
+          <Route
+            path="/blog"
+            element={
+              <Suspense fallback={<AdminFallback />}>
+                <Blog />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/blog/:slug"
+            element={
+              <Suspense fallback={<AdminFallback />}>
+                <BlogPost />
+              </Suspense>
             }
           />
 

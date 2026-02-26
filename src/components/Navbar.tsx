@@ -7,16 +7,19 @@ import { scrollToSection } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-const navLinks = [
+type NavLink = { label: string; id?: string; path?: string };
+
+const navLinks: NavLink[] = [
   { label: "Services", id: "services" },
   { label: "Pricing", id: "pricing" },
   { label: "Portfolio", id: "portfolio" },
   { label: "Process", id: "process" },
   { label: "FAQ", id: "faq" },
   { label: "Contact", id: "contact" },
+  { label: "Blog", path: "/blog" },
 ];
 
-const SECTION_IDS = navLinks.map((l) => l.id);
+const SECTION_IDS = navLinks.filter((l) => l.id).map((l) => l.id as string);
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -96,25 +99,34 @@ const Navbar = () => {
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-7">
           {navLinks.map((link) => {
+            if (link.path) {
+              return (
+                <Link
+                  key={link.label}
+                  to={link.path}
+                  className="text-sm font-body text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {link.label}
+                </Link>
+              );
+            }
             const isActive = activeSection === link.id;
             return (
               <button
                 key={link.id}
-                onClick={() => handleNav(link.id)}
+                onClick={() => handleNav(link.id!)}
                 className={cn(
                   "text-sm font-body transition-colors relative group pb-0.5",
                   isActive ? "text-primary" : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 {link.label}
-                {/* Active indicator dot */}
                 <span
                   className={cn(
                     "absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary transition-all duration-300",
                     isActive ? "opacity-100 scale-100" : "opacity-0 scale-0",
                   )}
                 />
-                {/* Hover underline */}
                 <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary/40 transition-all duration-300 group-hover:w-full" />
               </button>
             );
@@ -211,18 +223,32 @@ const Navbar = () => {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden fixed inset-0 top-16 bg-background/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center gap-7"
           >
-            {navLinks.map((link) => (
-              <button
-                key={link.id}
-                onClick={() => handleNav(link.id)}
-                className={cn(
-                  "text-2xl font-display font-semibold transition-colors",
-                  activeSection === link.id ? "text-primary" : "text-foreground",
-                )}
-              >
-                {link.label}
-              </button>
-            ))}
+            {navLinks.map((link) => {
+              if (link.path) {
+                return (
+                  <Link
+                    key={link.label}
+                    to={link.path}
+                    onClick={() => setIsOpen(false)}
+                    className="text-2xl font-display font-semibold text-foreground hover:text-primary transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                );
+              }
+              return (
+                <button
+                  key={link.id}
+                  onClick={() => handleNav(link.id!)}
+                  className={cn(
+                    "text-2xl font-display font-semibold transition-colors",
+                    activeSection === link.id ? "text-primary" : "text-foreground",
+                  )}
+                >
+                  {link.label}
+                </button>
+              );
+            })}
 
             {currentUser ? (
               <div className="flex flex-col items-center gap-4">
