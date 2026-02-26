@@ -12,6 +12,8 @@ import {
     RefreshCw,
     Clock,
     Bell,
+    LayoutDashboard,
+    Briefcase
 } from "lucide-react";
 import {
     collection,
@@ -28,16 +30,20 @@ import SummaryCards from "@/components/admin/SummaryCards";
 import LeadsTable from "@/components/admin/LeadsTable";
 import { LeadsTableSkeleton } from "@/components/admin/LeadsTableSkeleton";
 import AnalyticsView from "@/components/admin/AnalyticsView";
+import DashboardView from "@/components/admin/DashboardView";
+import ProjectsView from "@/components/admin/ProjectsView";
 import { ActivityTimeline } from "@/components/admin/ActivityTimeline";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { cn } from "@/lib/utils";
 import { fadeUp } from "@/lib/animations";
 
 // ─── Tab definition ────────────────────────────────────────────────────────────
-type Tab = "leads" | "analytics" | "activity" | "settings";
+type Tab = "dashboard" | "leads" | "projects" | "analytics" | "activity" | "settings";
 
-const sidebarItems: { id: Tab; label: string; icon: typeof Inbox }[] = [
+const sidebarItems: { id: Tab; label: string; icon: any }[] = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "leads", label: "Leads", icon: Inbox },
+    { id: "projects", label: "Projects", icon: Briefcase },
     { id: "analytics", label: "Analytics", icon: BarChart2 },
     { id: "activity", label: "Activity", icon: Clock },
     { id: "settings", label: "Settings", icon: Settings },
@@ -130,7 +136,7 @@ const SettingsPanel = () => {
 
 // ─── Main Admin page ───────────────────────────────────────────────────────────
 export default function Admin() {
-    const [activeTab, setActiveTab] = useState<Tab>("leads");
+    const [activeTab, setActiveTab] = useState<Tab>("dashboard");
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [leads, setLeads] = useState<Lead[]>([]);
     const [loadingLeads, setLoadingLeads] = useState(true);
@@ -316,6 +322,7 @@ export default function Admin() {
                             variants={fadeUp}
                             className="space-y-6"
                         >
+                            {activeTab === "dashboard" && <DashboardView leads={leads} />}
                             {activeTab === "leads" && (
                                 <>
                                     <SummaryCards leads={leads} />
@@ -326,6 +333,7 @@ export default function Admin() {
                                     )}
                                 </>
                             )}
+                            {activeTab === "projects" && <ProjectsView leads={leads} />}
                             {activeTab === "analytics" && <AnalyticsView leads={leads} />}
                             {activeTab === "activity" && (
                                 <div className="max-w-2xl">

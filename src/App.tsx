@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
+import ProjectDetailView from "./pages/ProjectDetailView";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import { RefreshCw } from "lucide-react";
@@ -42,6 +43,14 @@ const App = () => (
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/portal/project/:id"
+            element={
+              <ProtectedRoute>
+                <ProjectDetailView />
               </ProtectedRoute>
             }
           />
