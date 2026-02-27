@@ -9,6 +9,7 @@ import {
 import { fadeUp, fadeUpWithDelay, stagger } from "@/lib/animations";
 import { portfolioProjects, portfolioCategories, type PortfolioProject } from "@/data/portfolio";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 // ─── Icon resolver ─────────────────────────────────────────────────────────────
 const iconMap: Record<string, LucideIcon> = {
@@ -22,83 +23,7 @@ const Icon = ({ name, ...props }: { name: string; size?: number; className?: str
   return Component ? <Component {...props} /> : null;
 };
 
-// ─── Project Detail Modal ──────────────────────────────────────────────────────
-function ProjectModal({ project, onClose }: { project: PortfolioProject; onClose: () => void }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0, y: 20 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.9, opacity: 0, y: 20 }}
-        transition={{ type: "spring", damping: 25 }}
-        className="bg-card border border-border rounded-card w-full max-w-lg p-6 card-shadow"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-start justify-between mb-5">
-          <div
-            className={`w-14 h-14 rounded-xl bg-gradient-to-br ${project.gradient} flex items-center justify-center`}
-          >
-            <Icon name={project.icon} size={28} style={{ color: project.accentColor }} />
-          </div>
-          <button
-            onClick={onClose}
-            className="text-muted-foreground hover:text-foreground transition-colors p-1"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
-          {project.category}
-        </span>
-        <h3 className="font-display font-bold text-foreground text-xl mt-1 mb-3">
-          {project.title}
-        </h3>
-        <p className="text-muted-foreground text-sm leading-relaxed mb-5">
-          {project.description}
-        </p>
-
-        {/* Metrics */}
-        <div className="grid grid-cols-3 gap-3 mb-5">
-          {project.metrics.map((m) => (
-            <div
-              key={m.label}
-              className="bg-background/50 rounded-lg p-3 text-center border border-border"
-            >
-              <p className="font-display font-bold text-lg" style={{ color: project.accentColor }}>
-                {m.value}
-              </p>
-              <p className="text-muted-foreground text-xs mt-0.5">{m.label}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Delivery + Tags */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-mono text-muted-foreground">
-            🗓️ {project.deliveryWeeks} weeks delivery
-          </span>
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="text-xs px-2.5 py-1 rounded-full border border-border text-muted-foreground"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
-
+// removed modal markup
 // ─── Portfolio Card ────────────────────────────────────────────────────────────
 function PortfolioCard({
   project,
@@ -161,7 +86,7 @@ function PortfolioCard({
 // ─── Portfolio Section ─────────────────────────────────────────────────────────
 const Portfolio = () => {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [selectedProject, setSelectedProject] = useState<PortfolioProject | null>(null);
+  const navigate = useNavigate();
 
   const filtered =
     activeCategory === "All"
@@ -220,22 +145,13 @@ const Portfolio = () => {
                 key={project.id}
                 project={project}
                 index={i}
-                onView={() => setSelectedProject(project)}
+                onView={() => navigate(`/portfolio/${project.slug}`)}
               />
             ))}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Project Modal */}
-      <AnimatePresence>
-        {selectedProject && (
-          <ProjectModal
-            project={selectedProject}
-            onClose={() => setSelectedProject(null)}
-          />
-        )}
-      </AnimatePresence>
     </section>
   );
 };

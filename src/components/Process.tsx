@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { fadeUp, fadeUpWithDelay } from "@/lib/animations";
+import { Link } from "react-router-dom";
 
 const steps = [
   {
@@ -8,6 +9,7 @@ const steps = [
     details: "We learn your business, competitors, and goals. Then deliver 2 custom design concepts — you pick your favourite.",
     color: "bg-primary",
     textColor: "text-primary",
+    slug: "week-1-discovery-design"
   },
   {
     week: "Week 2",
@@ -15,6 +17,7 @@ const steps = [
     details: "Your approved design goes into production. Mobile-first, fast, clean code. Built for speed and conversions.",
     color: "bg-accent-blue",
     textColor: "text-accent-blue",
+    slug: "week-2-development"
   },
   {
     week: "Week 3",
@@ -22,6 +25,7 @@ const steps = [
     details: "We add your content, connect WhatsApp, Google Maps, and all third-party tools. SEO copy written by us.",
     color: "bg-gold",
     textColor: "text-gold",
+    slug: "week-3-content-integrations"
   },
   {
     week: "Week 4",
@@ -29,6 +33,7 @@ const steps = [
     details: "Cross-browser testing, speed optimization, and go-live. You get a Loom walkthrough video of your site.",
     color: "bg-accent-orange",
     textColor: "text-accent-orange",
+    slug: "week-4-testing-launch"
   },
   {
     week: "Ongoing",
@@ -36,6 +41,7 @@ const steps = [
     details: "30-day post-launch warranty. Monthly maintenance plans for hosting, backups, and content updates.",
     color: "bg-primary",
     textColor: "text-primary",
+    slug: "ongoing-support-growth"
   },
 ];
 
@@ -55,11 +61,13 @@ const Process = () => (
           {steps.map((step, i) => (
             <motion.div key={step.title} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUpWithDelay(i * 0.12)} className="flex flex-col items-center">
               <div className={`w-16 h-16 rounded-full ${step.color} flex items-center justify-center text-primary-foreground font-display font-bold text-lg z-10`}>{i + 1}</div>
-              <div className="mt-6 bg-card rounded-card card-shadow border border-border p-5 w-full">
-                <p className={`text-xs font-mono uppercase tracking-wider ${step.textColor}`}>{step.week}</p>
-                <h3 className="font-display font-bold text-foreground mt-1">{step.title}</h3>
-                <p className="text-muted-foreground text-sm mt-1">{step.details}</p>
-              </div>
+              <Link to={`/process/${step.slug}`} className="mt-6 w-full block">
+                <div className="bg-card rounded-card card-shadow border border-border p-5 w-full hover:border-primary transition-colors cursor-pointer h-full">
+                  <p className={`text-xs font-mono uppercase tracking-wider ${step.textColor}`}>{step.week}</p>
+                  <h3 className="font-display font-bold text-foreground mt-1">{step.title}</h3>
+                  <p className="text-muted-foreground text-sm mt-1">{step.details}</p>
+                </div>
+              </Link>
             </motion.div>
           ))}
         </div>
@@ -69,11 +77,13 @@ const Process = () => (
         {steps.map((step, i) => (
           <motion.div key={step.title} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="flex gap-4 items-start">
             <div className={`w-10 h-10 shrink-0 rounded-full ${step.color} flex items-center justify-center text-primary-foreground font-display font-bold text-sm`}>{i + 1}</div>
-            <div className="bg-card rounded-card card-shadow border border-border p-4 flex-1">
-              <p className={`text-xs font-mono uppercase tracking-wider ${step.textColor}`}>{step.week}</p>
-              <h3 className="font-display font-bold text-foreground mt-1">{step.title}</h3>
-              <p className="text-muted-foreground text-sm mt-1">{step.details}</p>
-            </div>
+            <Link to={`/process/${step.slug}`} className="flex-1 block w-full">
+              <div className="bg-card rounded-card card-shadow border border-border p-4 w-full hover:border-primary transition-colors cursor-pointer h-full">
+                <p className={`text-xs font-mono uppercase tracking-wider ${step.textColor}`}>{step.week}</p>
+                <h3 className="font-display font-bold text-foreground mt-1">{step.title}</h3>
+                <p className="text-muted-foreground text-sm mt-1">{step.details}</p>
+              </div>
+            </Link>
           </motion.div>
         ))}
       </div>

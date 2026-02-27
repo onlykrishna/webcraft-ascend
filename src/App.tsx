@@ -19,6 +19,16 @@ import { RefreshCw } from "lucide-react";
 const Admin = lazy(() => import("./pages/Admin"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
+const ServiceDetail = lazy(() => import("./pages/ServiceDetail").then(module => ({ default: module.ServiceDetailPage })));
+const ProblemDetail = lazy(() => import("./pages/ProblemDetail").then(module => ({ default: module.ProblemDetailPage })));
+const ProcessDetail = lazy(() => import("./pages/ProcessDetail").then(module => ({ default: module.ProcessDetailPage })));
+const PortfolioDetail = lazy(() => import("./pages/PortfolioDetail").then(module => ({ default: module.PortfolioDetailPage })));
+
+const Careers = lazy(() => import("./pages/company/Careers"));
+const Terms = lazy(() => import("./pages/company/Terms"));
+const Privacy = lazy(() => import("./pages/company/Privacy"));
+
+import { BottomCTAPopup } from "./components/BottomCTAPopup";
 
 const AdminFallback = () => (
   <div className="flex h-screen items-center justify-center bg-background gap-3">
@@ -70,6 +80,11 @@ const App = () => (
             }
           />
 
+          <Route path="/services/:slug" element={<Suspense fallback={<AdminFallback />}><ServiceDetail /></Suspense>} />
+          <Route path="/problems/:slug" element={<Suspense fallback={<AdminFallback />}><ProblemDetail /></Suspense>} />
+          <Route path="/process/:slug" element={<Suspense fallback={<AdminFallback />}><ProcessDetail /></Suspense>} />
+          <Route path="/portfolio/:slug" element={<Suspense fallback={<AdminFallback />}><PortfolioDetail /></Suspense>} />
+
           {/* Blog — public, lazy loaded */}
           <Route
             path="/blog"
@@ -88,10 +103,16 @@ const App = () => (
             }
           />
 
+          {/* Company pages */}
+          <Route path="/careers" element={<Suspense fallback={<AdminFallback />}><Careers /></Suspense>} />
+          <Route path="/terms" element={<Suspense fallback={<AdminFallback />}><Terms /></Suspense>} />
+          <Route path="/privacy" element={<Suspense fallback={<AdminFallback />}><Privacy /></Suspense>} />
+
           {/* 404 catch-all */}
           <Route path="*" element={<NotFound />} />
         </Routes>
         <CookieBanner />
+        <BottomCTAPopup />
       </BrowserRouter>
     </TooltipProvider>
   </AuthProvider>

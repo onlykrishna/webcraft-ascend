@@ -1,5 +1,6 @@
 import { scrollToSection } from "@/lib/scroll";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER;
@@ -58,36 +59,36 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <button
-                  onClick={() => comingSoon("Blog")}
+                <Link
+                  to="/blog"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Blog
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => comingSoon("Careers")}
+                <Link
+                  to="/careers"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Careers
-                </button>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/privacy"
+                <Link
+                  to="/privacy"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/terms"
+                <Link
+                  to="/terms"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Terms of Service
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
