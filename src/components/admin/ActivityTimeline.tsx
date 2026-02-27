@@ -9,6 +9,7 @@ const dotColor: Record<LeadStatus, string> = {
     new: "bg-emerald-400",
     contacted: "bg-blue-400",
     converted: "bg-purple-400",
+    reminding: "bg-amber-400",
     closed: "bg-gray-400",
     lost: "bg-red-400",
 };
@@ -62,6 +63,7 @@ export const ActivityTimeline = ({ leads }: Props) => {
                                                 "bg-emerald-500/15 text-emerald-400 border-emerald-500/30": lead.status === "new",
                                                 "bg-blue-500/15 text-blue-400 border-blue-500/30": lead.status === "contacted",
                                                 "bg-purple-500/15 text-purple-400 border-purple-500/30": lead.status === "converted",
+                                                "bg-amber-500/15 text-amber-400 border-amber-500/30": lead.status === "reminding",
                                                 "bg-gray-500/15 text-gray-400 border-gray-500/30": lead.status === "closed",
                                                 "bg-red-500/15 text-red-400 border-red-500/30": lead.status === "lost",
                                             },
